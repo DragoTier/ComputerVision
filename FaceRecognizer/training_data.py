@@ -115,6 +115,7 @@ def get_subjects():
     for person in directory_data:
         if person not in list_of_subjects:
             list_of_subjects.append(person)
+            list_of_subjects.sort()
 
     __subjects__ = list_of_subjects
     return list_of_subjects

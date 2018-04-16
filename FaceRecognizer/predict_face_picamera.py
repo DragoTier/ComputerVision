@@ -21,7 +21,8 @@ face_recognizer.read("./model/model.XML")
 
 # img = cv2.imread("./images/face_recognition/trump_1.jpg")   # Enter Image name
 img = raw_capture.array
-face = training_data.detect_face(img)
+faces, gray = training_data.detect_face(img)
+face = training_data.extract_face(gray, faces)
 
 label = face_recognizer.predict(face)
 subjects = training_data.get_subjects()

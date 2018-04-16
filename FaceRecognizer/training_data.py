@@ -8,18 +8,36 @@ __subjects__ = None
 
 
 def _show_faces(image, faces):
-    for (x, y, w, h) in faces:
-        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    first = True
+    last = False
+
+    # for (x, y, w, h) in faces:
+    #     if first:
+    #         first = False
+    #         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    #     else:
+    #         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 2)
+
+    for i in range(0, len(faces)):
+        (x, y, w, h) = faces[i]
+        last = i == len(faces)-1
+
+        if last:
+            last = False
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        else:
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 2)
 
     cv2.namedWindow("Faces found", cv2.WINDOW_NORMAL)
 
     w, h, d = image.shape
-    n_w = int(w / 2)
-    n_h = int(h / 2)
+    n_w = int(w / 3)
+    n_h = int(h / 3)
 
     im_s = cv2.resize(image, (n_h, n_w))
-    cv2.waitKey(0)
+
     cv2.imshow("Faces found", im_s)
+    cv2.waitKey(0)
 
 
 def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
@@ -46,11 +64,11 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
             # maxSize=(70, 70)
         )
 
-        # show_faces(image, faces)
+    #    _show_faces(image, faces)
 
         if len(faces) == 0:
             continue
-        x, y, w, h = faces[0]
+        x, y, w, h = faces[-1]
 
         if list_of_images is not None and list_of_labels is not None:
             list_of_person_images.append(gray[y:y+w, x:x+h])     # Extract detected face
@@ -137,9 +155,9 @@ def detect_face(image):
 
     faces = face_cascade.detectMultiScale(
         gray,
-        scaleFactor=1.2,
+        scaleFactor=1.1,
         minNeighbors=7,
-        minSize=(10, 10)
+        minSize=(20, 20)
         # maxSize=(70, 70)
     )
 
@@ -147,8 +165,13 @@ def detect_face(image):
 
     if len(faces) == 0:
         return None
-    x, y, w, h = faces[0]
 
-    detected_face = gray[y:y+w, x:x+h]
+    return faces, gray
+
+def extract_face(gray, faces):
+
+    x, y, w, h = faces[-1]
+
+    detected_face = gray[y:y + w, x:x + h]
 
     return detected_face

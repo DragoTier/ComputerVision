@@ -67,6 +67,7 @@ def _read_training_data(path):
     print("Loading training data...")
 
     directory_data = os.listdir(path)
+    directory_data.sort()
 
     for person in directory_data:
 
@@ -74,7 +75,8 @@ def _read_training_data(path):
 
         for image in person_directory_data:
 
-            img_load = cv2.imread(path + "/" + person + "/" + image)
+            pathToImage = path + "/" + person + "/" + image
+            img_load = cv2.imread(pathToImage)
 
             if list_of_images is not None and list_of_labels is not None:
                 list_of_images.append(img_load)
@@ -111,6 +113,7 @@ def get_training_data():
 def get_subjects():
     list_of_subjects = list()
     directory_data = os.listdir("./training")
+    directory_data.sort()
 
     for person in directory_data:
         if person not in list_of_subjects:

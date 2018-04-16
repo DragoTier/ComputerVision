@@ -34,7 +34,9 @@ if faces_and_gray_img is not None:
 	label = face_recognizer.predict(face)
 	subjects = training_data.get_subjects()
 
-	if(label[1] < 15):
+	if label[1] < 14.3:
 		print("Guessing that it is " + subjects[label[0]] + " with a distance of " + str(label[1]) + ".")
 	else:
 		print("Unknown face detected. Distance of " + str(label[1]) + " was too high. Maybe it could be " + subjects[label[0]] + ".")
+else:
+    print("NO face detected!")

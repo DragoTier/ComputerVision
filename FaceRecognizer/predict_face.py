@@ -6,7 +6,7 @@ print("Loading face recognizer...")
 face_recognizer = cv2.face_LBPHFaceRecognizer.create()
 face_recognizer.read("./model/model.XML")
 
-img = cv2.imread("./images/face_recognition/ivo_1.jpg")   # Enter Image name
+img = cv2.imread("./images/face_recognition/dennis_1.jpg")   # Enter Image name
 
 faces_and_gray_img = training_data.detect_face(img)
 
@@ -26,9 +26,11 @@ if faces_and_gray_img is not None:
     # cv2.imshow("Shooting", face)
     # cv2.waitKey(0)
 
-    if (label[1] < 80):
+    if label[1] < 14.3:
         print("Guessing that it is " + subjects[label[0]] + " with a distance of " + str(label[1]) + ".")
     else:
-        print("Unknown face detected. Distance of " + str(label[1]) + " was too high.")
+        print("Unknown face detected. Distance of " + str(label[1]) + " was too high. Maybe it could be " + subjects[
+            label[0]] + ".")
+
 else:
     print("NO face detected!")

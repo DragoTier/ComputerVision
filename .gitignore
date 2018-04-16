@@ -105,3 +105,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+FaceRecognizer/.idea/computergrafik.iml
+FaceRecognizer/.idea/misc.xml
+FaceRecognizer/.idea/workspace.xml

@@ -6,7 +6,7 @@ print("Loading face recognizer...")
 face_recognizer = cv2.face_LBPHFaceRecognizer.create()
 face_recognizer.read("./model/model.XML")
 
-img = cv2.imread("./images/face_recognition/merkel_3.jpg")   # Enter Image name
+img = cv2.imread("./images/face_recognition/ivo_1.jpg")   # Enter Image name
 
 faces_and_gray_img = training_data.detect_face(img)
 

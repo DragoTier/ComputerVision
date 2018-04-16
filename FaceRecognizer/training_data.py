@@ -78,6 +78,8 @@ def _read_training_data(path):
             pathToImage = path + "/" + person + "/" + image
             img_load = cv2.imread(pathToImage)
 
+            print(str(directory_data))
+
             if list_of_images is not None and list_of_labels is not None:
                 list_of_images.append(img_load)
                 if person not in list_of_subjects:
@@ -115,10 +117,38 @@ def get_subjects():
     directory_data = os.listdir("./training")
     directory_data.sort()
 
+    print(directory_data)
+
     for person in directory_data:
         if person not in list_of_subjects:
             list_of_subjects.append(person)
-            list_of_subjects.sort()
 
     __subjects__ = list_of_subjects
     return list_of_subjects
+
+
+def detect_face(image):
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    face_cascade = cv2.CascadeClassifier('./data/haarcascades_cuda/haarcascade_frontalface_default.xml')
+    # lbpcascades/lbpcascade_frontalface.xml
+    # haarcascades/haarcascade_frontalface_default.xml
+
+    faces = face_cascade.detectMultiScale(
+        gray,
+        scaleFactor=1.2,
+        minNeighbors=7,
+        minSize=(10, 10)
+        # maxSize=(70, 70)
+    )
+
+    # show_faces(image, faces)
+
+    if len(faces) == 0:
+        return None
+    x, y, w, h = faces[0]
+
+    detected_face = gray[y:y+w, x:x+h]
+
+    return detected_face

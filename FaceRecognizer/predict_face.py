@@ -7,8 +7,12 @@ face_recognizer = cv2.face_LBPHFaceRecognizer.create()
 face_recognizer.read("./model/model.XML")
 
 img = cv2.imread("./images/face_recognition/merkel_1.jpg")   # Enter Image name
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-label = face_recognizer.predict(gray)
+face = training_data.detect_face(img)
+
+label = face_recognizer.predict(face)
 subjects = training_data.get_subjects()
-print("Guessing that it is " + subjects[label[0]] + " with " + str(label[1]) + "% probability.")
+
+print(label)
+
+print("Guessing that it is " + subjects[label[0]] + " with " + str(label[1]) + " distance.")

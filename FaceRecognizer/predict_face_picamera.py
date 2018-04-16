@@ -21,9 +21,9 @@ face_recognizer.read("./model/model.XML")
 
 # img = cv2.imread("./images/face_recognition/trump_1.jpg")   # Enter Image name
 img = raw_capture.array
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+face = training_data.detect_face(img)
 
-label = face_recognizer.predict(gray)
+label = face_recognizer.predict(face)
 subjects = training_data.get_subjects()
 
 if(label[1] < 80):

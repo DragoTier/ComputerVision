@@ -132,17 +132,23 @@ def get_training_data():
 
 def get_subjects():
     list_of_subjects = list()
-    directory_data = os.listdir("./training")
-    directory_data.sort()
 
-    print(directory_data)
+    path = "./training"
+    if os.path.exists(path):
+        directory_data = os.listdir(path)
 
-    for person in directory_data:
-        if person not in list_of_subjects:
-            list_of_subjects.append(person)
+        directory_data.sort()
 
-    __subjects__ = list_of_subjects
-    return list_of_subjects
+        print(directory_data)
+
+        for person in directory_data:
+            if person not in list_of_subjects:
+                list_of_subjects.append(person)
+
+        __subjects__ = list_of_subjects
+        return list_of_subjects
+    else:
+        return None
 
 
 def detect_face(image):
@@ -167,6 +173,7 @@ def detect_face(image):
         return None
 
     return faces, gray
+
 
 def extract_face(gray, faces):
 

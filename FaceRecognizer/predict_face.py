@@ -6,31 +6,40 @@ print("Loading face recognizer...")
 face_recognizer = cv2.face_LBPHFaceRecognizer.create()
 face_recognizer.read("./model/model.XML")
 
-img = cv2.imread("./images/face_recognition/dennis_1.jpg")   # Enter Image name
+img = cv2.imread("./images/face_recognition/merkel_1.jpg")   # Enter Image name
 
-faces_and_gray_img = training_data.detect_face(img)
+if img is not None:
 
-if faces_and_gray_img is not None:
+    faces_and_gray_img = training_data.detect_face(img)
 
-    faces, gray = faces_and_gray_img
+    if faces_and_gray_img is not None:
 
-    face = training_data.extract_face(gray, faces)
+        faces, gray = faces_and_gray_img
 
-    training_data._show_faces(img, faces)
+        gray = cv2.equalizeHist(gray)  # equalize Histogram
 
-    label = face_recognizer.predict(face)
-    subjects = training_data.get_subjects()
+        face = training_data.extract_face(gray, faces)
 
-    print(label)
+        training_data._show_faces(img, faces)
 
-    # cv2.imshow("Shooting", face)
-    # cv2.waitKey(0)
+        label = face_recognizer.predict(face)
+        subjects = training_data.get_subjects()
 
-    if label[1] < 14.3:
-        print("Guessing that it is " + subjects[label[0]] + " with a distance of " + str(label[1]) + ".")
+        if subjects is not None:
+            print(label)
+
+            # cv2.imshow("Shooting", face)
+            # cv2.waitKey(0)
+
+            if label[1] < 14.3:
+                print("Guessing that it is " + subjects[label[0]] + " with a distance of " + str(label[1]) + ".")
+            else:
+                print("Unknown face detected. Distance of " + str(label[1]) + " was too high. Maybe it could be " + subjects[
+                    label[0]] + ".")
+        else:
+            print("No subjects found!")
+
     else:
-        print("Unknown face detected. Distance of " + str(label[1]) + " was too high. Maybe it could be " + subjects[
-            label[0]] + ".")
-
+        print("NO face detected!")
 else:
-    print("NO face detected!")
+    print("No image found!")

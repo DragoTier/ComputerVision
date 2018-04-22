@@ -2,7 +2,7 @@ import cv2
 import training_data
 import numpy as np
 import picamera
-from picamera.array import PiRGBArray 
+from picamera.array import PiRGBArray
 import time
 
 print("Starting camera...")
@@ -22,21 +22,32 @@ face_recognizer.read("./model/model.XML")
 # img = cv2.imread("./images/face_recognition/trump_1.jpg")   # Enter Image name
 img = raw_capture.array
 
-faces_and_gray_img = training_data.detect_face(img)
+if img is not None:
 
-if faces_and_gray_img is not None:
-	faces, gray = faces_and_gray_img
+    faces_and_gray_img = training_data.detect_face(img)
 
-	face = training_data.extract_face(gray, faces)
+    if faces_and_gray_img is not None:
+        faces, gray = faces_and_gray_img
 
-	training_data._show_faces(img, faces)
+        gray = cv2.equalizeHist(gray)  # equalize Histogram
 
-	label = face_recognizer.predict(face)
-	subjects = training_data.get_subjects()
+        face = training_data.extract_face(gray, faces)
 
-	if label[1] < 14.3:
-		print("Guessing that it is " + subjects[label[0]] + " with a distance of " + str(label[1]) + ".")
-	else:
-		print("Unknown face detected. Distance of " + str(label[1]) + " was too high. Maybe it could be " + subjects[label[0]] + ".")
+        training_data._show_faces(img, faces)
+
+        label = face_recognizer.predict(face)
+        subjects = training_data.get_subjects()
+
+        if subjects is not None:
+
+            if label[1] < 14.3:
+                print("Guessing that it is " + subjects[label[0]] + " with a distance of " + str(label[1]) + ".")
+            else:
+                print("Unknown face detected. Distance of " + str(label[1]) + " was too high. Maybe it could be " + subjects[
+                    label[0]] + ".")
+        else:
+            print("No subjects found!")
+    else:
+        print("NO face detected!")
 else:
-    print("NO face detected!")
+    print("No image found!")

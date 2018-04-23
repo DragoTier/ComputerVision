@@ -107,10 +107,13 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
 
         faces = face_cascade.detectMultiScale(
             gray,
-            scaleFactor=1.2,
+            scaleFactor=1.1,
             minNeighbors=7,
-            minSize=(10, 10)
-            # maxSize=(70, 70)
+            minSize=(20, 20)
+        
+            # scaleFactor=1.2,
+            # minNeighbors=7,
+            # minSize=(10, 10))
         )
 
     #    _show_faces(image, faces)
@@ -225,13 +228,13 @@ def detect_face(image):
 
     faces = face_cascade.detectMultiScale(
         gray,
-        # scaleFactor=1.1,
-        # minNeighbors=7,
-        # minSize=(20, 20)
-        
-        scaleFactor=1.2,
+        scaleFactor=1.1,
         minNeighbors=7,
-        minSize=(10, 10)
+        minSize=(20, 20)
+        
+        # scaleFactor=1.2,
+        # minNeighbors=7,
+        # minSize=(10, 10)
     )
 
     # show_faces(image, faces)

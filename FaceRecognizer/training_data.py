@@ -1,10 +1,57 @@
 import cv2
 import os
 import numpy as np
+import json
+import codecs
+from enum import Enum
+
 
 __images__ = None
 __labels__ = None
 __subjects__ = None
+
+__subject_file__ = 'subjects_all_wEQ.json'
+__model_file__ = 'model_all_wEQ.XML'
+
+
+class ModelConfiguration (Enum):
+    NoEqualization = 0
+    WithEqualization = 1
+    AllNoEqualization = 2
+    AllWithEqualization = 3
+    Standard = 4
+
+
+class _ModelConfigurationFileSuffix (Enum):
+    NoEqualization = '_noEQ'
+    WithEqualization = '_wEQ'
+    AllNoEqualization = '_all_noEQ'
+    AllWithEqualization = '_all_wEQ'
+    Standard = ''
+
+
+def set_model_configuration(enum_value):
+    global __subject_file__, __model_file__
+
+    if enum_value == ModelConfiguration.Standard:
+        __subject_file__ = 'subjects.json'
+        __model_file__ = 'model.XML'
+
+    if enum_value == ModelConfiguration.NoEqualization:
+        __subject_file__ = 'subjects' + str(_ModelConfigurationFileSuffix.NoEqualization.value) + '.json'
+        __model_file__ = 'model' + str(_ModelConfigurationFileSuffix.NoEqualization.value) + '.XML'
+
+    if enum_value == ModelConfiguration.WithEqualization:
+        __subject_file__ = 'subjects' + str(_ModelConfigurationFileSuffix.WithEqualization.value) + '.json'
+        __model_file__ = 'model' + str(_ModelConfigurationFileSuffix.WithEqualization.value) + '.XML'
+
+    if enum_value == ModelConfiguration.AllNoEqualization:
+        __subject_file__ = 'subjects' + str(_ModelConfigurationFileSuffix.AllNoEqualization.value) + '.json'
+        __model_file__ = 'model' + str(_ModelConfigurationFileSuffix.AllNoEqualization.value) + '.XML'
+
+    if enum_value == ModelConfiguration.AllWithEqualization:
+        __subject_file__ = 'subjects' + str(_ModelConfigurationFileSuffix.AllWithEqualization.value) + '.json'
+        __model_file__ = 'model' + str(_ModelConfigurationFileSuffix.AllWithEqualization.value) + '.XML'
 
 
 def _show_faces(image, faces):
@@ -34,9 +81,11 @@ def _show_faces(image, faces):
     n_w = int(w / 3)
     n_h = int(h / 3)
 
-    im_s = cv2.resize(image, (n_h, n_w))
+    # im_s = cv2.resize(image, (n_w, n_h))
 
-    cv2.imshow("Faces found", im_s)
+    cv2.resizeWindow('Faces found', n_h, n_w)
+
+    cv2.imshow("Faces found", image)
     cv2.waitKey(0)
 
 
@@ -96,8 +145,6 @@ def _read_training_data(path):
             pathToImage = path + "/" + person + "/" + image
             img_load = cv2.imread(pathToImage)
 
-            print(str(directory_data))
-
             if list_of_images is not None and list_of_labels is not None:
                 list_of_images.append(img_load)
                 if person not in list_of_subjects:
@@ -127,6 +174,8 @@ def get_training_data():
     global __images__, __labels__, __subjects__
     __images__, __labels__, __subjects__ = images, labels, subjects
 
+    save_subjects(subjects, __subject_file__)
+
     return images, labels, subjects
 
 
@@ -139,8 +188,6 @@ def get_subjects():
 
         directory_data.sort()
 
-        print(directory_data)
-
         for person in directory_data:
             if person not in list_of_subjects:
                 list_of_subjects.append(person)
@@ -149,6 +196,23 @@ def get_subjects():
         return list_of_subjects
     else:
         return None
+
+
+def get_subjects_from_json():
+    list_of_subjects = list()
+    path = "./model/" + __subject_file__
+
+    with open(path, encoding='utf-8') as data_file:
+
+        data_dict = json.loads(data_file.read())
+
+        if data_dict is not None:
+
+            return data_dict
+
+        else:
+
+            print("File not found or is empty! " + path)
 
 
 def detect_face(image):
@@ -182,3 +246,25 @@ def extract_face(gray, faces):
     detected_face = gray[y:y + w, x:x + h]
 
     return detected_face
+
+
+def save_subjects(subject_list, filename):
+    subject_dic = dict()
+
+    for element in subject_list:
+        subject_dic[subject_list.index(element)] = element
+
+    _save_subjects_to_file_(filename, subject_dic)
+
+
+def _save_subjects_to_file_(filename, dict_of_subjects):
+    path = './model/' + filename
+
+    with open(path, 'wb') as outfile:
+        json.dump(dict_of_subjects, codecs.getwriter('utf-8')(outfile), indent=4, ensure_ascii=False)
+        outfile.flush()
+        outfile.close()
+
+
+def get_model_name():
+    return __model_file__

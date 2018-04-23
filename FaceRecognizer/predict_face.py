@@ -41,7 +41,6 @@ if img is not None:
         subjects = training_data.get_subjects_from_json()
 
         if subjects is not None:
-            print(label)
 
             # cv2.imshow("Shooting", face)
             # cv2.waitKey(0)

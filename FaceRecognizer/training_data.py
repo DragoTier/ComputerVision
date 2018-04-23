@@ -202,7 +202,7 @@ def get_subjects_from_json():
     list_of_subjects = list()
     path = "./model/" + __subject_file__
 
-    with open(path, encoding='utf-8') as data_file:
+    with open(path, 'r') as data_file:
 
         data_dict = json.loads(data_file.read())
 
@@ -225,10 +225,13 @@ def detect_face(image):
 
     faces = face_cascade.detectMultiScale(
         gray,
-        scaleFactor=1.1,
+        # scaleFactor=1.1,
+        # minNeighbors=7,
+        # minSize=(20, 20)
+        
+        scaleFactor=1.2,
         minNeighbors=7,
-        minSize=(20, 20)
-        # maxSize=(70, 70)
+        minSize=(10, 10)
     )
 
     # show_faces(image, faces)

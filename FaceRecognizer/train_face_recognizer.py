@@ -25,8 +25,6 @@ labels_np = np.array(labels)
 
 print("Starting recognizer training...")
 
-# TODO: images_np mit equalized_images_np austauschen
-
 if images_np is not None and equalized_images_np is not None and labels_np is not None:
 
     face_recognizer.train(equalized_images_np, labels_np)

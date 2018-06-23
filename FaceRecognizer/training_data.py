@@ -1,10 +1,9 @@
-import cv2
-import os
-import numpy as np
-import json
 import codecs
+import json
+import os
 from enum import Enum
 
+import cv2
 
 __images__ = None
 __labels__ = None
@@ -14,7 +13,10 @@ __subject_file__ = 'subjects_all_wEQ.json'
 __model_file__ = 'model_all_wEQ.XML'
 
 
-class ModelConfiguration (Enum):
+class ModelConfiguration(Enum):
+    """
+    Stores different model configurations as enum.
+    """
     NoEqualization = 0
     WithEqualization = 1
     AllNoEqualization = 2
@@ -22,7 +24,10 @@ class ModelConfiguration (Enum):
     Standard = 4
 
 
-class _ModelConfigurationFileSuffix (Enum):
+class _ModelConfigurationFileSuffix(Enum):
+    """
+    Stores different file suffixes of model configuration as enum.
+    """
     NoEqualization = '_noEQ'
     WithEqualization = '_wEQ'
     AllNoEqualization = '_all_noEQ'
@@ -31,6 +36,11 @@ class _ModelConfigurationFileSuffix (Enum):
 
 
 def set_model_configuration(enum_value):
+    """
+    Determines which configuration is used to train the model based on the given enum.
+
+    :param enum_value: values used to determine the model configuration (see ModelConfiguration enum)
+    """
     global __subject_file__, __model_file__
 
     if enum_value == ModelConfiguration.Standard:
@@ -55,6 +65,12 @@ def set_model_configuration(enum_value):
 
 
 def _show_faces(image, faces):
+    """
+    Takes the face that was found last in the image, draws a rectangle to the given image and shows the result.
+
+    :param image: image that is used to draw the found face on
+    :param faces: list of faces that were found in the image
+    """
     first = True
     last = False
 
@@ -67,7 +83,7 @@ def _show_faces(image, faces):
 
     for i in range(0, len(faces)):
         (x, y, w, h) = faces[i]
-        last = i == len(faces)-1
+        last = i == len(faces) - 1
 
         if last:
             last = False
@@ -90,7 +106,14 @@ def _show_faces(image, faces):
 
 
 def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
-
+    """
+    Detects faces in images using haarcascades, crops the section of the image where a face was found and saves
+    those information as new lists of images, labels and subjects. These lists are returned.
+    :param list_of_images: images that are used to detect faces in
+    :param list_of_labels: labels tha
+    :param list_of_subjects: subject images belong to as list
+    :return: list of images, labels and subjects where faces were found in
+    """
     list_of_person_images = list()
     list_of_person_labels = list()
 
@@ -110,26 +133,31 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
             scaleFactor=1.1,
             minNeighbors=7,
             minSize=(20, 20)
-        
+
             # scaleFactor=1.2,
             # minNeighbors=7,
             # minSize=(10, 10))
         )
 
-    #    _show_faces(image, faces)
+        #    _show_faces(image, faces)
 
         if len(faces) == 0:
             continue
         x, y, w, h = faces[-1]
 
         if list_of_images is not None and list_of_labels is not None:
-            list_of_person_images.append(gray[y:y+w, x:x+h])     # Extract detected face
+            list_of_person_images.append(gray[y:y + w, x:x + h])  # Extract detected face
             list_of_person_labels.append(list_of_labels[i])
 
     return list_of_person_images, list_of_person_labels, list_of_subjects
 
 
 def _read_training_data(path):
+    """
+    
+    :param path:
+    :return:
+    """
     list_of_images = list()
     list_of_labels = list()
     list_of_subjects = list()
@@ -219,7 +247,6 @@ def get_subjects_from_json():
 
 
 def detect_face(image):
-
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     face_cascade = cv2.CascadeClassifier('./data/haarcascades_cuda/haarcascade_frontalface_default.xml')
@@ -231,7 +258,7 @@ def detect_face(image):
         scaleFactor=1.1,
         minNeighbors=7,
         minSize=(20, 20)
-        
+
         # scaleFactor=1.2,
         # minNeighbors=7,
         # minSize=(10, 10)
@@ -246,7 +273,6 @@ def detect_face(image):
 
 
 def extract_face(gray, faces):
-
     x, y, w, h = faces[-1]
 
     detected_face = gray[y:y + w, x:x + h]

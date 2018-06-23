@@ -4,6 +4,7 @@ import os
 def __rename_training_data__(path):
     """
     Renames all files at a given path to have numerical names only
+
     :param path: path where files will be renamed
     """
     temp_directory_data = os.listdir(path)

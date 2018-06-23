@@ -109,6 +109,7 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
     """
     Detects faces in images using haarcascades, crops the section of the image where a face was found and saves
     those information as new lists of images, labels and subjects. These lists are returned.
+
     :param list_of_images: images that are used to detect faces in
     :param list_of_labels: labels tha
     :param list_of_subjects: subject images belong to as list
@@ -154,7 +155,7 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
 
 def _read_training_data(path):
     """
-    
+
     :param path:
     :return:
     """
@@ -164,6 +165,7 @@ def _read_training_data(path):
 
     print("Loading training data...")
 
+    # sort files in ascending order to avoid problems in connection with the different file systems of linux and windows
     directory_data = os.listdir(path)
     directory_data.sort()
 

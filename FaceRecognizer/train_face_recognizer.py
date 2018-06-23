@@ -6,9 +6,6 @@ import numpy as np
 
 print("Starting with opencv version " + cv2.__version__)
 
-# https://docs.opencv.org/3.0-beta/modules/face/doc/facerec/facerec_api.html#createlbphfacerecognizer
-face_recognizer = cv2.face_LBPHFaceRecognizer.create()
-
 # SET MODEL CONFIG
 training_data.set_model_configuration(training_data.ModelConfiguration.AllWithEqualization)
 
@@ -22,6 +19,9 @@ for image in images:
 images_np = np.array(images)
 equalized_images_np = np.array(equalized_images)
 labels_np = np.array(labels)
+
+# https://docs.opencv.org/3.0-beta/modules/face/doc/facerec/facerec_api.html#createlbphfacerecognizer
+face_recognizer = cv2.face_LBPHFaceRecognizer.create()
 
 print("Starting recognizer training...")
 

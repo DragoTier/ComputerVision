@@ -5,6 +5,14 @@ import picamera
 from picamera.array import PiRGBArray
 import time
 
+"""
+This script uses a raspberry pi camera module to take a photo and evaluates if the person in the photo is one of the
+subjects of the training process.
+The data (model file path) will be provided from the training_data.py script.
+When a face is detected in the taken image the recognition process will start.
+The script will give a console output as feedback.
+"""
+
 print("Starting camera...")
 
 LIGHT_RED = '\033[91m'
@@ -38,7 +46,7 @@ else:
 
     face_recognizer.read("./model/model.XML")
 
-# img = cv2.imread("./images/face_recognition/trump_1.jpg")   # Enter Image name
+    # img = cv2.imread("./images/face_recognition/trump_1.jpg")   # Enter Image name
 
 if raw_capture is not None:
 
@@ -46,6 +54,7 @@ if raw_capture is not None:
 
     faces_and_gray_img = training_data.detect_face(img)
 
+    # when face in image
     if faces_and_gray_img is not None:
         faces, gray = faces_and_gray_img
 
@@ -56,6 +65,7 @@ if raw_capture is not None:
         label = face_recognizer.predict(face)
         subjects = training_data.get_subjects_from_json()
 
+        # subject json has content
         if subjects is not None:
 
             if label[1] < 14.3:

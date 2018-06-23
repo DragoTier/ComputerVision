@@ -2,6 +2,14 @@ import cv2
 import training_data
 import numpy as np
 
+"""
+This script reads an image from a static location and evaluates if the person in the photo is one of the
+subjects of the training process.
+The data (model file path) will be provided from the training_data.py script.
+When a face is detected in the taken image the recognition process will start.
+The script will give a console output as feedback.
+"""
+
 LIGHT_RED = '\033[91m'
 LIGHT_GREEN = '\033[32m'
 END = '\033[0m'
@@ -27,6 +35,7 @@ if img is not None:
 
     faces_and_gray_img = training_data.detect_face(img)
 
+    # when face is dound
     if faces_and_gray_img is not None:
 
         faces, gray = faces_and_gray_img
@@ -40,10 +49,8 @@ if img is not None:
         label = face_recognizer.predict(face)
         subjects = training_data.get_subjects_from_json()
 
+        # subject json has content
         if subjects is not None:
-
-            # cv2.imshow("Shooting", face)
-            # cv2.waitKey(0)
 
             if label[1] < 14.3:
                 print("Guessing that it is " + LIGHT_GREEN + subjects[str(label[0])] + END + " with a distance of " +

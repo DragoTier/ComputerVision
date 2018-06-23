@@ -2,6 +2,10 @@ import os
 
 
 def __rename_training_data__(path):
+    """
+    Renames all files at a given path to have numerical names only
+    :param path: path where files will be renamed
+    """
     temp_directory_data = os.listdir(path)
     counter = 0
 
@@ -18,4 +22,5 @@ def __rename_training_data__(path):
         counter += 1
 
 
-__rename_training_data__("./training/merkel")
+# Insert directory to rename here
+# __rename_training_data__("./training/merkel")

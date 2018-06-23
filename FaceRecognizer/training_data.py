@@ -100,6 +100,7 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
     """
     Detects faces in images using haarcascades, crops the section of the image where a face was found and saves
     those information as new lists of images, labels and subjects. These lists are returned.
+
     :param list_of_images: images that are used to detect faces in
     :param list_of_labels: labels tha
     :param list_of_subjects: subject images belong to as list
@@ -144,6 +145,7 @@ def _read_training_data(path):
     Reads a given directory and uses all folder names in it as subject labels.
     All content of said folders is interpreted as images for the labeled subject.
     Detects every face in each image and returns lists of images with faces, labels and subjects.
+
     :param path: path to the training data
     :return: list of images, labels and subjects where faces were found in
     """
@@ -153,6 +155,7 @@ def _read_training_data(path):
 
     print("Loading training data...")
 
+    # sort files in ascending order to avoid problems in connection with the different file systems of linux and windows
     directory_data = os.listdir(path)
     directory_data.sort()
 
@@ -179,6 +182,7 @@ def _read_training_data(path):
 def get_training_data():
     """
     Reads the static "./training" directory and returns the training data
+
     :return: list of images, labels and subjects where faces were found in
     """
     images, labels, subjects = _read_training_data("./training")
@@ -198,6 +202,7 @@ def get_training_data():
 def get_subjects():
     """
     Returns all subject names at the static "./training" directory
+
     :return: list of subjects that were found
     """
     list_of_subjects = list()
@@ -222,6 +227,7 @@ def get_subjects():
 def get_subjects_from_json():
     """
     Returns all subject names in the ".model/subjects_*.json"
+
     :return: dictionary of subjects that were found
     """
     path = "./model/" + __subject_file__
@@ -242,6 +248,7 @@ def get_subjects_from_json():
 def detect_face(image):
     """
     Detects faces in the given image using haarcascades.
+
     :param image: image to detect a face in
     :return: faces: list of found faces
     """
@@ -269,6 +276,7 @@ def detect_face(image):
 def extract_face(gray, faces):
     """
     Extracts a face in the given image.
+
     :param gray: image where the face was detected
     :param faces: list of coordinates where the face was found
     :return: detected_face: cropped region of the found face
@@ -283,6 +291,7 @@ def extract_face(gray, faces):
 def save_subjects(subject_list, filename):
     """
     Saves a list of subjects as a dictionary to a given file
+
     :param subject_list: list of subjects to save
     :param filename: file to store the information in
     """
@@ -297,6 +306,7 @@ def save_subjects(subject_list, filename):
 def _save_subjects_to_file_(filename, dict_of_subjects):
     """
     Saves a dictionary of subjects to a given filename. The path is ".model/FILENAME"
+    
     :param filename: file to store the information in
     :param dict_of_subjects: dictionary of subjects to save
     """

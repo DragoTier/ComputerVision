@@ -71,21 +71,14 @@ def _show_faces(image, faces):
     :param image: image that is used to draw the found face on
     :param faces: list of faces that were found in the image
     """
-    first = True
     last = False
-
-    # for (x, y, w, h) in faces:
-    #     if first:
-    #         first = False
-    #         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
-    #     else:
-    #         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 2)
 
     for i in range(0, len(faces)):
         (x, y, w, h) = faces[i]
         last = i == len(faces) - 1
 
         if last:
+            global last
             last = False
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
         else:
@@ -96,8 +89,6 @@ def _show_faces(image, faces):
     w, h, d = image.shape
     n_w = int(w / 3)
     n_h = int(h / 3)
-
-    # im_s = cv2.resize(image, (n_w, n_h))
 
     cv2.resizeWindow('Faces found', n_h, n_w)
 
@@ -134,10 +125,6 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
             scaleFactor=1.1,
             minNeighbors=7,
             minSize=(20, 20)
-
-            # scaleFactor=1.2,
-            # minNeighbors=7,
-            # minSize=(10, 10))
         )
 
         #    _show_faces(image, faces)
@@ -155,9 +142,12 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
 
 def _read_training_data(path):
     """
+    Reads a given directory and uses all folder names in it as subject labels.
+    All content of said folders is interpreted as images for the labeled subject.
+    Detects every face in each image and returns lists of images with faces, labels and subjects.
 
-    :param path:
-    :return:
+    :param path: path to the training data
+    :return: list of images, labels and subjects where faces were found in
     """
     list_of_images = list()
     list_of_labels = list()
@@ -184,20 +174,17 @@ def _read_training_data(path):
                     list_of_subjects.append(person)
                 list_of_labels.append(list_of_subjects.index(person))
 
-    # for image in directory_data:
-    #
-    #     image_load = cv2.imread(path + "/" + image)
-    #     list_of_images = list_of_images.append(image_load)
-    #
-    #     list_of_labels = list_of_labels.append(path.split("/")[-1])
-    #
-
     images, labels, subjects = _detect_faces(list_of_images, list_of_labels, list_of_subjects)
 
     return images, labels, subjects
 
 
 def get_training_data():
+    """
+    Reads the static "./training" directory and returns the training data
+
+    :return: list of images, labels and subjects where faces were found in
+    """
     images, labels, subjects = _read_training_data("./training")
 
     print("Images: " + str(len(images)))
@@ -213,6 +200,11 @@ def get_training_data():
 
 
 def get_subjects():
+    """
+    Returns all subject names at the static "./training" directory
+
+    :return: list of subjects that were found
+    """
     list_of_subjects = list()
 
     path = "./training"
@@ -220,6 +212,7 @@ def get_subjects():
         directory_data = os.listdir(path)
 
         directory_data.sort()
+        global __subjects__
 
         for person in directory_data:
             if person not in list_of_subjects:
@@ -232,7 +225,11 @@ def get_subjects():
 
 
 def get_subjects_from_json():
-    list_of_subjects = list()
+    """
+    Returns all subject names in the ".model/subjects_*.json"
+
+    :return: dictionary of subjects that were found
+    """
     path = "./model/" + __subject_file__
 
     with open(path, 'r') as data_file:
@@ -249,6 +246,12 @@ def get_subjects_from_json():
 
 
 def detect_face(image):
+    """
+    Detects faces in the given image using haarcascades.
+
+    :param image: image to detect a face in
+    :return: faces: list of found faces
+    """
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     face_cascade = cv2.CascadeClassifier('./data/haarcascades_cuda/haarcascade_frontalface_default.xml')
@@ -260,10 +263,6 @@ def detect_face(image):
         scaleFactor=1.1,
         minNeighbors=7,
         minSize=(20, 20)
-
-        # scaleFactor=1.2,
-        # minNeighbors=7,
-        # minSize=(10, 10)
     )
 
     # show_faces(image, faces)
@@ -275,6 +274,13 @@ def detect_face(image):
 
 
 def extract_face(gray, faces):
+    """
+    Extracts a face in the given image.
+
+    :param gray: image where the face was detected
+    :param faces: list of coordinates where the face was found
+    :return: detected_face: cropped region of the found face
+    """
     x, y, w, h = faces[-1]
 
     detected_face = gray[y:y + w, x:x + h]
@@ -283,6 +289,12 @@ def extract_face(gray, faces):
 
 
 def save_subjects(subject_list, filename):
+    """
+    Saves a list of subjects as a dictionary to a given file
+
+    :param subject_list: list of subjects to save
+    :param filename: file to store the information in
+    """
     subject_dic = dict()
 
     for element in subject_list:
@@ -292,6 +304,12 @@ def save_subjects(subject_list, filename):
 
 
 def _save_subjects_to_file_(filename, dict_of_subjects):
+    """
+    Saves a dictionary of subjects to a given filename. The path is ".model/FILENAME"
+    
+    :param filename: file to store the information in
+    :param dict_of_subjects: dictionary of subjects to save
+    """
     path = './model/' + filename
 
     with open(path, 'wb') as outfile:
@@ -301,4 +319,7 @@ def _save_subjects_to_file_(filename, dict_of_subjects):
 
 
 def get_model_name():
+    """
+    Returns the current filename where the trained recognizer is stored
+    """
     return __model_file__

@@ -1,6 +1,6 @@
 import cv2
+
 import training_data
-import numpy as np
 
 """
 This script reads an image from a static location and evaluates if the person in the photo is one of the
@@ -29,7 +29,7 @@ else:
 
     face_recognizer.read("./model/model.XML")
 
-img = cv2.imread("./images/face_recognition/merkel_1.jpg")   # Enter Image name
+img = cv2.imread("./images/face_recognition/merkel_3.jpg")   # Enter Image name
 
 if img is not None:
 

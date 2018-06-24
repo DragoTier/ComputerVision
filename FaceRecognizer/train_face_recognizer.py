@@ -9,7 +9,6 @@ For better training results all image histograms are equalized before used for t
 """
 
 # https://www.superdatascience.com/opencv-face-recognition/
-
 print("Starting with opencv version " + cv2.__version__)
 
 # SET MODEL CONFIG

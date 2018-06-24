@@ -71,15 +71,14 @@ def _show_faces(image, faces):
     :param image: image that is used to draw the found face on
     :param faces: list of faces that were found in the image
     """
-    last = False
+    # last = False
 
     for i in range(0, len(faces)):
         (x, y, w, h) = faces[i]
         last = i == len(faces) - 1
 
         if last:
-            global last
-            last = False
+            # last = False
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
         else:
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 2)
@@ -122,9 +121,11 @@ def _detect_faces(list_of_images, list_of_labels, list_of_subjects):
 
         faces = face_cascade.detectMultiScale(
             gray,
-            scaleFactor=1.1,
-            minNeighbors=7,
-            minSize=(20, 20)
+            scaleFactor=1.1,  # use standard scale factor which specifies how much the image size is reduced at each
+            # image scale
+            minNeighbors=7,  # specifies how many neighbors each candidate rectangle should have to retain it -->
+            # higher value finds less faces with better quality
+            minSize=(20, 20)  # minimal size of the found faces in the image
         )
 
         #    _show_faces(image, faces)
@@ -165,8 +166,8 @@ def _read_training_data(path):
 
         for image in person_directory_data:
 
-            pathToImage = path + "/" + person + "/" + image
-            img_load = cv2.imread(pathToImage)
+            path_to_image = path + "/" + person + "/" + image
+            img_load = cv2.imread(path_to_image)
 
             if list_of_images is not None and list_of_labels is not None:
                 list_of_images.append(img_load)
@@ -306,7 +307,7 @@ def save_subjects(subject_list, filename):
 def _save_subjects_to_file_(filename, dict_of_subjects):
     """
     Saves a dictionary of subjects to a given filename. The path is ".model/FILENAME"
-    
+
     :param filename: file to store the information in
     :param dict_of_subjects: dictionary of subjects to save
     """

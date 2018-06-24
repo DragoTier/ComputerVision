@@ -1,9 +1,10 @@
+import time
+
 import cv2
-import training_data
-import numpy as np
 import picamera
 from picamera.array import PiRGBArray
-import time
+
+import training_data
 
 """
 This script uses a raspberry pi camera module to take a photo and evaluates if the person in the photo is one of the
@@ -31,12 +32,12 @@ with picamera.PiCamera() as camera:
 print("Image taken...")
 
 print("Loading face recognizer...")
-face_recognizer = cv2.face_LBPHFaceRecognizer.create()
-
 
 # SET MODEL CONFIG
 training_data.set_model_configuration(training_data.ModelConfiguration.AllWithEqualization)
 model_file = training_data.get_model_name()
+
+face_recognizer = cv2.face_LBPHFaceRecognizer.create()
 
 if model_file is not None:
 
@@ -45,8 +46,6 @@ if model_file is not None:
 else:
 
     face_recognizer.read("./model/model.XML")
-
-    # img = cv2.imread("./images/face_recognition/trump_1.jpg")   # Enter Image name
 
 if raw_capture is not None:
 

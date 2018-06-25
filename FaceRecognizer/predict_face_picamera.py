@@ -34,7 +34,7 @@ print("Image taken...")
 print("Loading face recognizer...")
 
 # SET MODEL CONFIG
-training_data.set_model_configuration(training_data.ModelConfiguration.AllWithEqualization)
+training_data.set_model_configuration(training_data.ModelConfiguration.WithEqualization)
 model_file = training_data.get_model_name()
 
 face_recognizer = cv2.face_LBPHFaceRecognizer.create()
@@ -67,7 +67,7 @@ if raw_capture is not None:
         # subject json has content
         if subjects is not None:
 
-            if label[1] < 14.3:
+            if label[1] < 28:  # 14.3, 17
                 print("Guessing that it is " + LIGHT_GREEN + subjects[str(label[0])] + END + " with a distance of " +
                       LIGHT_GREEN + str(label[1]) + END + ".")
             else:
